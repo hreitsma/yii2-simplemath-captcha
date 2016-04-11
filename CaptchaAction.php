@@ -17,30 +17,38 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
     const JPEG_FORMAT = 'jpeg';
     const PNG_FORMAT = 'png';
 
+	public $operators = ['+'];
+	
+	/**
+     * Min value of variables.
+     * @var int
+     */
+    public $minValue = 1;
+	
 	/**
      * Max value of variables.
      * @var int
      */
     public $maxValue = 10;
 	
+	/**
+     * Font size.
+     * @var int
+     */
+    public $fontSize = 14;
+	
     /**
      * Avaliable values are 'jpeg' or 'png'
      * @var string 
      */
     public $imageFormat = self::PNG_FORMAT;
-	
-	/**
-     * Font size.
-     * @var int
-     */
-    public $size = 14;
 
     /**
      * @inheritdoc
      */
     public function init()
     {
-        
+		
     }
 
     /**
@@ -50,11 +58,11 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
     {
         if (Yii::$app->request->getQueryParam(self::REFRESH_GET_VAR) !== null) {
             // AJAX request for regenerating code
-            $code = $this->getVerifyCode(true);
+            $equation = $this->getVerifyCode(true);
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                'hash1' => $this->generateValidationHash($code),
-                'hash2' => $this->generateValidationHash(strtolower($code)),
+                'hash1' => $this->generateValidationHash($equation),
+                'hash2' => $this->generateValidationHash(strtolower($equation)),
                 // we add a random 'v' parameter so that FireFox can refresh the image
                 // when src attribute of image tag is changed
                 'url' => Url::to([$this->id, 'v' => uniqid()]),
@@ -69,7 +77,7 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
     /**
      * @inheritdoc
      */
-    public function getVerifyCode($regenerate = false, $code = false)
+    public function getVerifyCode($regenerate = false, $equation = false)
     {
         $session = Yii::$app->getSession();
         $session->open();
@@ -80,7 +88,7 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
             $session[$name . 'count'] = 1;
         }
 
-        return $code ? $session[$name . 'code'] : $session[$name];
+        return $equation ? $session[$name . 'code'] : $session[$name];
     }
 
     /**
@@ -88,8 +96,8 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
      */
     public function validate($input)
     {
-        $code = $this->getVerifyCode(false, true);
-        $value = $this->getValue($code);
+        $equation = $this->getVerifyCode(false, true);
+        $value = $this->getValue($equation);
         
         $valid = $input == $value;
 
@@ -111,23 +119,24 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
     {
         mt_srand(time());
 		
-		$code = [
-			mt_rand(1, $this->maxValue),
-			mt_rand(0, $this->maxValue)
+		$equation = [
+			'first' => mt_rand($this->minValue, $this->maxValue),
+			'operator' => $this->operators[array_rand($this->operators)],
+			'second' => mt_rand($this->minValue, $this->maxValue)
 		];
 
-        return $code;
+        return $equation;
     }
 
     /**
      * @inheritdoc
      */
-    protected function renderImage($code)
+    protected function renderImage($equation)
     {
         require __DIR__ . '/mathpublisher.php';
 
-        $formula = new \expression_math(tableau_expression(trim($this->getExpression($code))));
-        $formula->dessine($this->size);
+        $formula = new \expression_math(tableau_expression(trim($this->getExpression($equation))));
+        $formula->dessine($this->fontSize);
 
         ob_start();
         switch ($this->imageFormat) {
@@ -158,29 +167,29 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
 
     /**
      * Get expresion formula .
-     * @param array $code
+     * @param array $equation
      * @return string
      */
-    protected function getExpression($code)
+    protected function getExpression($equation)
     {
         if ($this->fixedVerifyCode !== null) {
             return $this->fixedVerifyCode;
         }
 		
-		return "{$code[0]}~+~{$code[1]}~=";
+		return $equation['first'] ."~". $equation['operator'] ."~". $equation['second'] ."~=";
     }
 
     /**
      * Get value of formula
-     * @param array $code
+     * @param array $equation
      * @return int|float
      */
-    protected function getValue($code)
+    protected function getValue($equation)
     {
         if ($this->fixedVerifyCode !== null) {
             return $this->fixedVerifyCode;
         }
 		
-		return $code[0] + $code[1];
+		return eval('return '. $equation['first'] . $equation['operator'] . $equation['second'] .';');
     }
 }
