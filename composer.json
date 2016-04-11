@@ -1,0 +1,30 @@
+{
+    "name": "hreitsma/yii2-simplemath-captcha",
+    "description": "Simple Math Captcha",
+    "keywords": ["yii2", "captcha", "math"],
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/hreitsma/yii2-captcha/issues",
+        "source": "https://github.com/hreitsma/yii2-captcha"
+    },
+    "authors": [
+        {
+            "name": "Henk Reitsma",
+            "email": "henkreitsma1990@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "hr\\captcha\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
+}
