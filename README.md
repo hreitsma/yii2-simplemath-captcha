@@ -1,7 +1,7 @@
 # yii2-simplemath-captcha
+
 Simple math captcha for spam detection in forms
 
-Captcha With Math Equation
 Installation
 
 The preferred way to install this extension is through composer.
