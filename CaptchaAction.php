@@ -1,6 +1,6 @@
 <?php
 
-namespace mdm\captcha;
+namespace hr\captcha;
 
 use Yii;
 use yii\web\Response;
