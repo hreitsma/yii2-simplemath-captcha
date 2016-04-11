@@ -18,13 +18,13 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
     const PNG_FORMAT = 'png';
 
 	/**
-     * Font size.
+     * Max value of variables.
      * @var int
      */
     public $maxValue = 10;
 	
     /**
-     * Avaliable value are 'jpeg' or 'png'
+     * Avaliable values are 'jpeg' or 'png'
      * @var string 
      */
     public $imageFormat = self::PNG_FORMAT;
@@ -34,12 +34,6 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
      * @var int
      */
     public $size = 14;
-
-    /**
-     * Allow decimal
-     * @var boolean 
-     */
-    public $allowDecimal = false;
 
     /**
      * @inheritdoc
@@ -118,7 +112,7 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
         mt_srand(time());
 		
 		$code = [
-			mt_rand(0, $this->maxValue),
+			mt_rand(1, $this->maxValue),
 			mt_rand(0, $this->maxValue)
 		];
 
@@ -132,7 +126,7 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
     {
         require __DIR__ . '/mathpublisher.php';
 
-        $formula = new \expression_math(tableau_expression(trim($this->getExpresion($code))));
+        $formula = new \expression_math(tableau_expression(trim($this->getExpression($code))));
         $formula->dessine($this->size);
 
         ob_start();
@@ -167,13 +161,13 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
      * @param array $code
      * @return string
      */
-    protected function getExpresion($code)
+    protected function getExpression($code)
     {
         if ($this->fixedVerifyCode !== null) {
             return $this->fixedVerifyCode;
         }
 		
-		return "{$code[0]} + {$code[1]}";
+		return "{$code[0]}~+~{$code[1]}~=";
     }
 
     /**
