@@ -16,8 +16,12 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
 {
     const JPEG_FORMAT = 'jpeg';
     const PNG_FORMAT = 'png';
-
-	public $operators = ['+'];
+    
+	/**
+     * One of these operators will be used.
+     * @var int
+     */
+    public $operators = ['+'];
 	
 	/**
      * Min value of variables.
