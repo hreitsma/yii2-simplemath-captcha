@@ -50,7 +50,7 @@ $form->field($model, 'verifyCode')->widget(Captcha::className(), [
 ?>
 ```
 
-If you are using prettyUrl:
+In config/web.php
 
 ```php
 'rules' => [
