@@ -98,7 +98,7 @@ class CaptchaAction extends \yii\captcha\CaptchaAction
     /**
      * @inheritdoc
      */
-    public function validate($input)
+    public function validate($input,$caseSensitive = false)
     {
         $equation = $this->getVerifyCode(false, true);
         $value = $this->getValue($equation);
