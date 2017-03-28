@@ -45,7 +45,7 @@ In view
 ```php
 <?=
 $form->field($model, 'verifyCode')->widget(Captcha::className(), [
-    //'captchaAction' => 'site/captcha', // uncomment and change if your not in the default controller or module
+    //'captchaAction' => 'site/captcha', // uncomment and change if your not in the default controller or a module
     'template' => '<div class="row"><div class="col-lg-2">{image}</div><div class="col-lg-10">{input}</div></div>',
 ])->hint('Hint: click on the equation to refresh')
 ?>
