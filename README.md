@@ -43,6 +43,8 @@ public function actions()
 
 In view
 ```php
+use yii\captcha\Captcha;
+
 <?=
 $form->field($model, 'verifyCode')->widget(Captcha::className(), [
     //'captchaAction' => 'site/captcha', // uncomment and change if your not in the default controller or a module
