@@ -43,7 +43,9 @@ public function actions()
 
 In view
 ```php
+<?php
 use yii\captcha\Captcha;
+?>
 
 <?=
 $form->field($model, 'verifyCode')->widget(Captcha::className(), [
